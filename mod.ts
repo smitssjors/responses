@@ -14,7 +14,11 @@ interface BaseOptions {
   headers?: HeadersInit;
 }
 
-interface ResponseOptions extends BaseOptions {
+interface LocationOption {
+  location?: string | URL;
+}
+
+interface ResponseOptions extends BaseOptions, LocationOption {
   status?: Status;
   statusText?: string;
 }
@@ -26,13 +30,21 @@ export function response(body?: Body, options?: ResponseOptions): Response {
     options.cookies.forEach((c) => setCookie(headers, c));
   }
 
+  if (options?.location) {
+    const url = typeof options.location === "string"
+      ? options.location
+      : options.location.toString();
+
+    headers.set("Location", url);
+  }
+
   const status = options?.status ?? Status.OK;
   const statusText = options?.statusText ?? STATUS_TEXT[status];
 
   const responseInit: ResponseInit = { headers, status, statusText };
 
   // All types form https://developer.mozilla.org/en-US/docs/Web/API/Response/Response
-  // except String as it is not a valid type for BodyInit in Deno
+  // except String as it is for some reason not a valid type for BodyInit in Deno
   if (
     body == null || typeof body === "string" || body instanceof Blob ||
     body instanceof ReadableStream || body instanceof ArrayBuffer ||
@@ -59,4 +71,10 @@ type OkResponseOptions = BaseOptions;
 
 export function ok(body?: Body, options?: OkResponseOptions): Response {
   return response(body, options);
+}
+
+interface CreatedResponseOptions extends BaseOptions, LocationOption {}
+
+export function created(body?: Body, options?: CreatedResponseOptions): Response {
+  return response(body, { ...options, status: Status.Created });
 }
