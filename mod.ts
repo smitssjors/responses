@@ -14,11 +14,11 @@ interface BaseOptions {
   headers?: HeadersInit;
 }
 
-interface LocationOption {
+interface LocationOptions extends BaseOptions {
   location?: string | URL;
 }
 
-interface ResponseOptions extends BaseOptions, LocationOption {
+interface ResponseOptions extends LocationOptions {
   status?: Status;
   statusText?: string;
 }
@@ -73,8 +73,65 @@ export function ok(body?: Body, options?: OkResponseOptions): Response {
   return response(body, options);
 }
 
-interface CreatedResponseOptions extends BaseOptions, LocationOption {}
+type CreatedResponseOptions = LocationOptions;
 
-export function created(body?: Body, options?: CreatedResponseOptions): Response {
+export function created(
+  body?: Body,
+  options?: CreatedResponseOptions,
+): Response {
   return response(body, { ...options, status: Status.Created });
+}
+
+type NoContentResponseOptions = BaseOptions;
+
+export function noContent(options?: NoContentResponseOptions): Response {
+  return response(null, { ...options, status: Status.NoContent });
+}
+
+interface RedirectResponseOptions extends BaseOptions {
+  status?: Status;
+}
+
+export function redirect(
+  url: string | URL,
+  options?: RedirectResponseOptions,
+): Response {
+  const status = options?.status ?? Status.Found;
+  return response(null, { ...options, location: url, status });
+}
+
+type BadRequestResponseOptions = BaseOptions;
+
+export function badRequest(
+  body?: Body,
+  options?: BadRequestResponseOptions,
+): Response {
+  return response(body, { ...options, status: Status.BadRequest });
+}
+
+type UnauthorizedResponseOptions = BaseOptions;
+
+export function unauthorized(
+  body?: Body,
+  options?: UnauthorizedResponseOptions,
+): Response {
+  return response(body, { ...options, status: Status.Unauthorized });
+}
+
+type ForbiddenResponseOptions = BaseOptions;
+
+export function forbidden(
+  body?: Body,
+  options?: ForbiddenResponseOptions,
+): Response {
+  return response(body, { ...options, status: Status.Forbidden });
+}
+
+type NotFoundResponseOptions = BaseOptions;
+
+export function notFound(
+  body?: Body,
+  options?: NotFoundResponseOptions,
+): Response {
+  return response(body, { ...options, status: Status.NotFound });
 }
