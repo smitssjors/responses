@@ -12,7 +12,7 @@ extra benifits are:
 # Usage
 
 ```ts
-import { ok, response } from "https://deno.land/x/responses/mod.ts";
+import { ok, redirect, response } from "https://deno.land/x/responses/mod.ts";
 
 // Empty response, same as new Response()
 response();
@@ -34,4 +34,6 @@ response("Hello", {
 
 // There are also a handfull of commonly used responses
 ok(); // Status: 200, Status Text: "OK".
+
+redirect("/home", { status: 307 });
 ```
