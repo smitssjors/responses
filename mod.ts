@@ -1,11 +1,11 @@
 import {
   Cookie,
   setCookie,
-} from "https://deno.land/std@0.187.0/http/cookie.ts";
+} from "https://deno.land/std@0.198.0/http/cookie.ts";
 import {
   Status,
   STATUS_TEXT,
-} from "https://deno.land/std@0.187.0/http/http_status.ts";
+} from "https://deno.land/std@0.198.0/http/http_status.ts";
 
 type Body = unknown;
 
